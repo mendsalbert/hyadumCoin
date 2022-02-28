@@ -7,5 +7,4 @@ class Block {
   ) {}
 }
 
-const block1 = new Block(new Date(), "foo-hash", "boo-hash", "block data");
-console.log(block1);
+module.exports = Block;
