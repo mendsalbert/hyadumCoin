@@ -1,5 +1,6 @@
 import Block from "../block";
 import GENESIS_DATA from "../config";
+import cryptoHash from "../cryto-hash";
 interface block {
   timestamp: Date;
   lastHash: String;
@@ -52,6 +53,12 @@ describe("Block", () => {
 
     it("sets a timestamp", () => {
       expect(minedBlock.timestamp).not.toEqual(undefined);
+    });
+
+    it("create SHA 256 Based on proper inputs", () => {
+      expect(minedBlock.hash).toEqual(
+        cryptoHash(minedBlock.timestamp, minedBlock.lastHash, minedBlock.data)
+      );
     });
   });
 });
