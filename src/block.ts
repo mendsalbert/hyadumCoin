@@ -1,4 +1,14 @@
 import GENESIS_DATA from "./config";
+// interface minedBlock {
+//   lastBlock: {
+//     timestamp: Date;
+//     lastHash: String;
+//     hash: String;
+//     data: any;
+//   };
+//   data: any;
+// }
+
 class Block {
   constructor(
     public timestamp: Date,
@@ -14,7 +24,10 @@ class Block {
       GENESIS_DATA.hash,
       GENESIS_DATA.data
     );
-    // return new Block(new Date(), "foo-hash", "foo-hash", "any");
+  }
+
+  static minedBlock({ lastBlock, data }: any) {
+    return new Block(new Date(), lastBlock.hash!, "hash", data);
   }
 }
 
