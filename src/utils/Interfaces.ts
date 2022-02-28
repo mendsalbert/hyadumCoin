@@ -9,3 +9,10 @@ export interface MinedBlock {
   };
   data: any;
 }
+
+export interface block {
+  timestamp: Date;
+  lastHash: String;
+  hash: String;
+  data: any;
+}

@@ -6,7 +6,7 @@
   "scripts": {
     "release": "standard-version",
     "start": "ts-node ./src/index.ts",
-    "dev": "nodemon ./src/block.ts",
+    "dev": "nodemon ./src/blockchain.ts",
     "test": "jest --watchAll"
   },
   "keywords": [],
