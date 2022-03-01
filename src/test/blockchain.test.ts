@@ -59,6 +59,15 @@ describe("Blockchain", () => {
   });
 
   describe("replaceChain", () => {
+    let errorMock: any, logMock: any;
+
+    beforeEach(() => {
+      errorMock = jest.fn();
+      logMock = jest.fn();
+      global.console.error = errorMock;
+      global.console.log = logMock;
+    });
+
     describe("when the chain is longer", () => {
       beforeEach(() => {
         newchain.addBlock({ data: "mends albert" });
@@ -66,17 +75,29 @@ describe("Blockchain", () => {
         newchain.addBlock({ data: "steve jobs" });
       });
       describe("and the chain is invalid", () => {
-        it("does not replace chain", () => {
+        beforeEach(() => {
           newchain.chain[2].hash = "some fake data";
           blockchain.replaceChain(newchain.chain);
+        });
+        it("does not replace chain", () => {
           expect(blockchain.chain).toEqual(originalChain);
+        });
+
+        it("logs error", () => {
+          expect(errorMock).toHaveBeenCalled();
         });
       });
 
       describe("and the chain is valid", () => {
-        it("does replace chian", () => {
+        beforeEach(() => {
           blockchain.replaceChain(newchain.chain);
+        });
+        it("does replace chian", () => {
           expect(blockchain.chain).toEqual(newchain.chain);
+        });
+
+        it("logs chain", () => {
+          expect(logMock).toHaveBeenCalled();
         });
       });
     });
