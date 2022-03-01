@@ -23,8 +23,6 @@ describe("Block", () => {
 
   describe("genesis()", () => {
     const genesisBlock = Block.genesis();
-    console.log("genesisBlock", genesisBlock);
-    console.log("genesis data", GENESIS_DATA);
     it("return a block instance", () => {
       expect(genesisBlock instanceof Block).toBe(true);
     });
