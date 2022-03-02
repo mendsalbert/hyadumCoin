@@ -6,6 +6,8 @@ export interface MinedBlock {
     lastHash: String;
     hash: String;
     data: any;
+    nonce: number;
+    difficulty: number;
   };
   data: any;
 }
@@ -15,4 +17,6 @@ export interface block {
   lastHash: String;
   hash: String;
   data: any;
+  nonce: number;
+  difficulty: number;
 }
