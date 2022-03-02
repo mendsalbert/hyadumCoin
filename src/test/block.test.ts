@@ -6,19 +6,25 @@ interface block {
   lastHash: String;
   hash: String;
   data: any;
+  nonce: number;
+  difficulty: number;
 }
 describe("Block", () => {
   const timestamp = new Date();
   const lastHash = "foo-hash";
   const hash = "hash";
   const data = "data";
-  const block = new Block(timestamp, lastHash, hash, data);
+  const nonce = 1;
+  const difficulty = 1;
+  const block = new Block(timestamp, lastHash, hash, data, nonce, difficulty);
 
-  it("has timestamp, lastHash, hash, date", () => {
+  it("has timestamp, lastHash, hash, data, nonce, difficulty", () => {
     expect(block.timestamp).toEqual(timestamp);
     expect(block.lastHash).toEqual(lastHash);
     expect(block.hash).toEqual(hash);
     expect(block.data).toEqual(data);
+    expect(block.nonce).toEqual(nonce);
+    expect(block.difficulty).toEqual(difficulty);
   });
 
   describe("genesis()", () => {
@@ -55,7 +61,13 @@ describe("Block", () => {
 
     it("create SHA 256 Based on proper inputs", () => {
       expect(minedBlock.hash).toEqual(
-        cryptoHash(minedBlock.timestamp, minedBlock.lastHash, minedBlock.data)
+        cryptoHash(
+          minedBlock.timestamp,
+          minedBlock.lastHash,
+          minedBlock.data,
+          minedBlock.nonce,
+          minedBlock.difficulty
+        )
       );
     });
   });
