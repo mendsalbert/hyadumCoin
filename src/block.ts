@@ -9,8 +9,8 @@ class Block {
     public lastHash: String,
     public hash: String,
     public data: any,
-    public difficulty: number,
-    public nonce: number
+    public nonce: number,
+    public difficulty: number
   ) {}
 
   static genesis() {
@@ -36,6 +36,7 @@ class Block {
       timestamp = new Date();
       nonce++;
       hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
+      console.log("minedBlock=========", hash);
     } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
 
     return new Block(timestamp, lastHash, hash, data, nonce, difficulty);
