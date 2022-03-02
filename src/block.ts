@@ -25,18 +25,20 @@ class Block {
   }
 
   static minedBlock({ lastBlock, data }: MinedBlock) {
-    const timestamp = new Date();
+    let timestamp;
+    // const timestamp = new Date();
+    let hash;
     const lastHash = lastBlock.hash;
     const { difficulty } = lastBlock;
-    let nonce: number = 0;
-    return new Block(
-      timestamp,
-      lastHash,
-      cryptoHash(timestamp, lastHash, data, nonce, difficulty),
-      data,
-      nonce,
-      difficulty
-    );
+    let nonce = 0;
+
+    do {
+      timestamp = new Date();
+      nonce++;
+      hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
+    } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
+
+    return new Block(timestamp, lastHash, hash, data, nonce, difficulty);
   }
 }
 
