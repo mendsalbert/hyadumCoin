@@ -1,5 +1,7 @@
 import { NumberLiteralType } from "typescript";
-import GENESIS_DATA from "./config";
+// import {GENESIS_DATA,MINED_RATE} from "./config";
+// import GENESIS_DATA from './config'
+import { GENESIS_DATA, MINED_RATE } from "./config";
 import cryptoHash from "./cryto-hash";
 import { MinedBlock } from "./utils/Interfaces";
 
