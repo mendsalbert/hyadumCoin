@@ -56,13 +56,6 @@ class Block {
   static adjustDifficulty({ originalBlock, timestamp }: adjustDifficulty) {
     const { difficulty } = originalBlock;
     if (timestamp.valueOf() - originalBlock.timestamp.valueOf() > MINED_RATE) {
-      //   console.log(
-      //     "differnce========",
-      //     timestamp.valueOf() - originalBlock.timestamp.valueOf(),
-      //     "minded rate",
-      //     MINED_RATE
-      //   );
-
       return difficulty - 1;
     }
     return difficulty + 1;
