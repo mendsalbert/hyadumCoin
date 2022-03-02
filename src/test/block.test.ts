@@ -1,3 +1,4 @@
+var hexToBinary = require("hex-to-binary");
 import Block from "../block";
 import { GENESIS_DATA, MINED_RATE } from "../config";
 import cryptoHash from "../cryto-hash";
@@ -79,9 +80,9 @@ describe("Block", () => {
     });
 
     it("set a hash that matches difficulty", () => {
-      expect(minedBlock.hash.substring(0, minedBlock.difficulty)).toEqual(
-        "0".repeat(minedBlock.difficulty)
-      );
+      expect(
+        hexToBinary(minedBlock.hash).substring(0, minedBlock.difficulty)
+      ).toEqual("0".repeat(minedBlock.difficulty));
     });
   });
 

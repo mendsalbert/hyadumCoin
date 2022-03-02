@@ -1,6 +1,5 @@
-import { NumberLiteralType } from "typescript";
-// import {GENESIS_DATA,MINED_RATE} from "./config";
-// import GENESIS_DATA from './config'
+// import hexToBinary from 'hex-to-binary';
+var hexToBinary = require("hex-to-binary");
 import { GENESIS_DATA, MINED_RATE } from "./config";
 import cryptoHash from "./cryto-hash";
 import { block, MinedBlock } from "./utils/Interfaces";
@@ -48,7 +47,9 @@ class Block {
       hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
       //   console.log("minedBlock=========", hash);
       //   console.log("difficulty======", difficulty);
-    } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
+    } while (
+      hexToBinary(hash).substring(0, difficulty) !== "0".repeat(difficulty)
+    );
 
     return new Block(timestamp, lastHash, hash, data, nonce, difficulty);
   }
