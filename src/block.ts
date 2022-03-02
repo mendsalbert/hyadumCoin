@@ -5,6 +5,11 @@ import { GENESIS_DATA, MINED_RATE } from "./config";
 import cryptoHash from "./cryto-hash";
 import { block, MinedBlock } from "./utils/Interfaces";
 
+interface adjustDifficulty {
+  originalBlock: Block;
+  timestamp: Date;
+}
+
 class Block {
   constructor(
     public timestamp: Date,
@@ -28,25 +33,36 @@ class Block {
 
   static minedBlock({ lastBlock, data }: MinedBlock) {
     let timestamp;
-    // const timestamp = new Date();
-    let hash;
     const lastHash = lastBlock.hash;
-    const { difficulty } = lastBlock;
+    let { difficulty } = lastBlock;
+    let hash;
     let nonce = 0;
 
     do {
       timestamp = new Date();
       nonce++;
+      difficulty = this.adjustDifficulty({
+        originalBlock: lastBlock,
+        timestamp,
+      });
       hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
       //   console.log("minedBlock=========", hash);
+      //   console.log("difficulty======", difficulty);
     } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
 
     return new Block(timestamp, lastHash, hash, data, nonce, difficulty);
   }
 
-  static adjustDifficulty({ originalBlock, timestamp }: any) {
+  static adjustDifficulty({ originalBlock, timestamp }: adjustDifficulty) {
     const { difficulty } = originalBlock;
-    if (timestamp - originalBlock.timestamp > MINED_RATE) {
+    if (timestamp.valueOf() - originalBlock.timestamp.valueOf() > MINED_RATE) {
+      //   console.log(
+      //     "differnce========",
+      //     timestamp.valueOf() - originalBlock.timestamp.valueOf(),
+      //     "minded rate",
+      //     MINED_RATE
+      //   );
+
       return difficulty - 1;
     }
     return difficulty + 1;
