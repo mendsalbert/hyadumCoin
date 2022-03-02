@@ -1,5 +1,5 @@
 import Block from "../block";
-import { GENESIS_DATA } from "../config";
+import { GENESIS_DATA, MINED_RATE } from "../config";
 import cryptoHash from "../cryto-hash";
 interface block {
   timestamp: Date;
@@ -76,5 +76,18 @@ describe("Block", () => {
         "0".repeat(minedBlock.difficulty)
       );
     });
+  });
+
+  describe("adjustDifficulty", () => {
+    it("raises difficulty for quickly mined block", () => {
+      expect(
+        Block.adjustDifficulty({
+          originalBlock: block,
+          timestamp: block.timestamp,
+        })
+      ).toEqual(block.timestamp);
+    });
+
+    it(" low diffiiculty for a slowly mined block", () => {});
   });
 });

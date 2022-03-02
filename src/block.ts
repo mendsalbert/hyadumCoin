@@ -3,7 +3,7 @@ import { NumberLiteralType } from "typescript";
 // import GENESIS_DATA from './config'
 import { GENESIS_DATA, MINED_RATE } from "./config";
 import cryptoHash from "./cryto-hash";
-import { MinedBlock } from "./utils/Interfaces";
+import { block, MinedBlock } from "./utils/Interfaces";
 
 class Block {
   constructor(
@@ -38,10 +38,18 @@ class Block {
       timestamp = new Date();
       nonce++;
       hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
-      console.log("minedBlock=========", hash);
+      //   console.log("minedBlock=========", hash);
     } while (hash.substring(0, difficulty) !== "0".repeat(difficulty));
 
     return new Block(timestamp, lastHash, hash, data, nonce, difficulty);
+  }
+
+  static adjustDifficulty({ originalBlock, timestamp }: any) {
+    const { difficulty } = originalBlock;
+    if (timestamp - originalBlock.timestamp > MINED_RATE) {
+      return difficulty - 1;
+    }
+    return difficulty + 1;
   }
 }
 
