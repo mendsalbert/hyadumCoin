@@ -37,11 +37,15 @@ class Blockchain {
     for (var i = 1; i < chain.length; i++) {
       const block = chain[i];
       const actualLastHash = chain[i - 1].hash;
+      const actualLastDifficulty = chain[i - 1];
+
       const { timestamp, lastHash, hash, data, nonce, difficulty } = block;
       //check if last hash is valid
       if (lastHash !== actualLastHash) {
         return false;
       }
+
+      if (actualLastDifficulty - difficulty > 1) return false;
       //check if data has not been tempered with
       const validatedHash = cryptoHash(
         timestamp,
