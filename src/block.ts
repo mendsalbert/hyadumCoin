@@ -46,5 +46,3 @@ class Block {
 }
 
 export default Block;
-
-// module.exports = Block;
