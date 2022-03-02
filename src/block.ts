@@ -58,6 +58,7 @@ class Block {
     if (timestamp.valueOf() - originalBlock.timestamp.valueOf() > MINED_RATE) {
       return difficulty - 1;
     }
+    if (difficulty < 1) return 1;
     return difficulty + 1;
   }
 }
