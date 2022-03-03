@@ -25,15 +25,31 @@
 
 const redis = require("redis");
 
-const subscriber = redis.createClient();
-const publisher = redis.createClient();
+const CHANNEL = {
+  TEST: "TEST",
+};
+class PubSub {
+  subscriber: any;
+  publisher: any;
+  constructor() {
+    this.subscriber = redis.createClient();
+    this.publisher = redis.createClient();
 
-subscriber.on("message", (channel, message) => {
-  console.log("Received data :" + message);
-});
+    this.subscriber.subscribe(CHANNEL.TEST);
 
-subscriber.subscribe("user-notify");
+    this.subscriber.on("message", (channel: string, message: string) =>
+      this.handleMessage(channel, message)
+    );
+  }
+
+  handleMessage(channel: string, message: string) {
+    console.log("recieved data", message);
+    console.log("chanell", channel);
+  }
+}
+
+const pubsub = new PubSub();
 
 setTimeout(() => {
-  publisher.publish("user-notify", "foo");
-}, 200);
+  pubsub.publisher.publish(CHANNEL.TEST, "foo");
+}, 1000);
