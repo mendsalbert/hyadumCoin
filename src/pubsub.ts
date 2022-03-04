@@ -1,41 +1,19 @@
-// // import redis from "redis";
-// const redis = require("redis");
-// const CHANNEL = {
-//   TEST: "TEST",
-// };
-// class PubSub {
-//   constructor() {
-//     this.subscriber = redis.createClient(6379, "127.0.0.1");
-//     this.publisher = redis.createClient(6379, "127.0.0.1");
-
-//     this.subscriber.subscribe(CHANNEL.TEST);
-
-//     this.subscriber.on("message", (channel, message) =>
-//       this.handleMessage(channel, message)
-//     );
-//   }
-
-//   handleMessage(channel, message) {
-//     console.log("message recieved", channel, message);
-//   }
-// }
-
-// const testPub = new PubSub();
-// testPub.publisher.publish(CHANNEL.TEST, "FOO");
-
 const redis = require("redis");
 
 const CHANNEL = {
   TEST: "TEST",
+  BLOCKCHIAN: "TEST",
 };
 class PubSub {
   subscriber: any;
   publisher: any;
-  constructor() {
+  blockchain: any;
+  constructor({ blockchain }: any) {
+    this.blockchain = blockchain;
     this.subscriber = redis.createClient();
     this.publisher = redis.createClient();
 
-    this.subscriber.subscribe(CHANNEL.TEST);
+    this.subscribeToChanels();
 
     this.subscriber.on("message", (channel: string, message: string) =>
       this.handleMessage(channel, message)
@@ -46,10 +24,14 @@ class PubSub {
     console.log("recieved data", message);
     console.log("chanell", channel);
   }
+
+  subscribeToChanels() {
+    Object.values(CHANNEL).forEach((channel) => {
+      this.subscriber.subscribe(channel);
+    });
+  }
+
+  publish({ channel, message }: any) {}
 }
 
-const pubsub = new PubSub();
-
-setTimeout(() => {
-  pubsub.publisher.publish(CHANNEL.TEST, "foo");
-}, 1000);
+export default PubSub;

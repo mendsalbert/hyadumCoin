@@ -6,8 +6,9 @@
   "scripts": {
     "release": "standard-version",
     "start": "ts-node ./src/index.ts",
-    "dev": "nodemon ./src/pubsub.ts",
-    "test": "jest --watchAll"
+    "dev": "nodemon ./src/server.ts",
+    "test": "jest --watchAll",
+    "start-redis": "redis-server --daemonize yes"
   },
   "keywords": [],
   "author": "",
