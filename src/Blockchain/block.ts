@@ -45,8 +45,6 @@ class Block {
         timestamp,
       });
       hash = cryptoHash(timestamp, lastHash, data, nonce, difficulty);
-      //   console.log("minedBlock=========", hash);
-      //   console.log("difficulty======", difficulty);
     } while (
       hexToBinary(hash).substring(0, difficulty) !== "0".repeat(difficulty)
     );

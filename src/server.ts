@@ -5,7 +5,7 @@ import { Blockchain_ } from "./utils/Interfaces";
 const request = require("request");
 const app: Application = express();
 
-const blockchain = new Blockchain();
+const blockchain: Blockchain = new Blockchain();
 
 const DEFAULT_PORT = 3000;
 let PEER_PORT;
@@ -14,7 +14,7 @@ if (process.env.GENERATE_PEER_PORT === "true") {
 }
 const port = PEER_PORT || DEFAULT_PORT;
 const ROOT_NODE_ADDERSS = `http://localhost:${DEFAULT_PORT}`;
-const pubsub = new PubSub({ blockchain });
+const pubsub = new PubSub(blockchain);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
