@@ -27,3 +27,9 @@ export interface Blockchain_ {
   replaceChain(chain: any): any;
   isValidChain(chain: any): boolean;
 }
+
+export interface VerifySignature {
+  publicKey: string;
+  data: string;
+  signature: string;
+}
