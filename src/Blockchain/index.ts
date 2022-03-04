@@ -1,7 +1,6 @@
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 import Block from "./block";
-import cryptoHash from "./cryto-hash";
-import { block } from "./utils/Interfaces";
+import cryptoHash from "../utils/cryto-hash";
+import { block } from "../utils/Interfaces";
 class Blockchain {
   chain: any[];
 

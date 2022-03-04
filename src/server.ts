@@ -1,6 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import Blockchain from "./blockchain";
-import PubSub from "./pubsub";
+import PubSub from "./app/pubsub";
 const request = require("request");
 const app: Application = express();
 
@@ -37,7 +37,7 @@ const syncChains = () => {
     (error: any, response: any, body: any) => {
       if (!error && response.statusCode === 200) {
         const chain = JSON.parse(body);
-        // console.log(chain);
+        console.log(chain);
         blockchain.replaceChain(chain);
       }
     }

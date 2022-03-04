@@ -1,5 +1,5 @@
-import Block from "../block";
-import Blockchain from "../blockchain";
+import Block from "../Blockchain/block";
+import Blockchain from "../Blockchain/";
 import { block } from "../utils/Interfaces";
 describe("Blockchain", () => {
   let blockchain: Blockchain, newchain: Blockchain, originalChain: any;

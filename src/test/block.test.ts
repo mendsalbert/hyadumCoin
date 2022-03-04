@@ -1,7 +1,7 @@
 var hexToBinary = require("hex-to-binary");
-import Block from "../block";
+import Block from "../Blockchain/block";
 import { GENESIS_DATA, MINED_RATE } from "../config";
-import cryptoHash from "../cryto-hash";
+import cryptoHash from "../utils/cryto-hash";
 interface block {
   timestamp: Date;
   lastHash: String;

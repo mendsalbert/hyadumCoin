@@ -1,8 +1,8 @@
 // import hexToBinary from 'hex-to-binary';
 var hexToBinary = require("hex-to-binary");
-import { GENESIS_DATA, MINED_RATE } from "./config";
-import cryptoHash from "./cryto-hash";
-import { block, MinedBlock } from "./utils/Interfaces";
+import { GENESIS_DATA, MINED_RATE } from "../config";
+import cryptoHash from "../utils/cryto-hash";
+import { block, MinedBlock } from "../utils/Interfaces";
 
 interface adjustDifficulty {
   originalBlock: Block;
