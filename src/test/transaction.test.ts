@@ -24,14 +24,12 @@ describe("Transaction", () => {
     });
 
     it("output the amout of recipient", () => {
-      expect(transaction.outputMap[recipeint]).toHaveProperty(amount);
+      expect(transaction.outputMap[recipeint]).toEqual(amount);
     });
 
     it("output the amout of sender", () => {
       let balance: any = senderWallet.balance - amount;
-      expect(transaction.outputMap[senderWallet.publicKey]).toHaveProperty(
-        balance
-      );
+      expect(transaction.outputMap[senderWallet.publicKey]).toEqual(balance);
     });
   });
 });
