@@ -1,10 +1,16 @@
 import express, { Application, Request, Response } from "express";
 import Blockchain from "./blockchain";
+import PubSub from "./pubsub";
 const app: Application = express();
 
 const blockchain = new Blockchain();
 const port = 3000;
 
+const pubsub = new PubSub({ blockchain });
+
+setTimeout(() => {
+  pubsub.broadcastChain();
+}, 1000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

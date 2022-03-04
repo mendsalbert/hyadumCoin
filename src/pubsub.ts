@@ -22,7 +22,12 @@ class PubSub {
 
   handleMessage(channel: string, message: string) {
     console.log("recieved data", message);
-    console.log("chanell", channel);
+    console.log("channel", channel);
+
+    const parseData = JSON.parse(message);
+    if (channel === CHANNEL.BLOCKCHIAN) {
+      this.blockchain.replaceChain(parseData);
+    }
   }
 
   subscribeToChanels() {
@@ -31,7 +36,16 @@ class PubSub {
     });
   }
 
-  publish({ channel, message }: any) {}
+  publish({ channel, message }: any) {
+    this.publisher.publish(channel, message);
+  }
+
+  broadcastChain() {
+    this.publish({
+      CHANNEL: CHANNEL.BLOCKCHIAN,
+      message: JSON.stringify(this.blockchain.chain),
+    });
+  }
 }
 
 export default PubSub;
