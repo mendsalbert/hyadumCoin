@@ -15,9 +15,6 @@ const port = PEER_PORT || DEFAULT_PORT;
 const ROOT_NODE_ADDERSS = `http://localhost:${DEFAULT_PORT}`;
 const pubsub = new PubSub({ blockchain });
 
-setTimeout(() => {
-  pubsub.broadcastChain();
-}, 1000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,7 +37,7 @@ const syncChains = () => {
     (error: any, response: any, body: any) => {
       if (!error && response.statusCode === 200) {
         const chain = JSON.parse(body);
-        console.log(chain);
+        // console.log(chain);
         blockchain.replaceChain(chain);
       }
     }
