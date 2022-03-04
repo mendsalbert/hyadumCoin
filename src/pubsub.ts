@@ -2,7 +2,7 @@ const redis = require("redis");
 
 const CHANNEL = {
   TEST: "TEST",
-  BLOCKCHIAN: "TEST",
+  BLOCKCHIAN: "BLOCKCHAIN",
 };
 class PubSub {
   subscriber: any;
@@ -42,7 +42,7 @@ class PubSub {
 
   broadcastChain() {
     this.publish({
-      CHANNEL: CHANNEL.BLOCKCHIAN,
+      channel: CHANNEL.BLOCKCHIAN,
       message: JSON.stringify(this.blockchain.chain),
     });
   }
