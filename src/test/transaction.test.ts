@@ -5,7 +5,7 @@ describe("Transaction", () => {
   let transaction: Transaction,
     senderWallet: Wallet,
     recipeint: string,
-    amount: number;
+    amount: any;
 
   beforeEach(() => {
     senderWallet = new Wallet();
@@ -18,7 +18,20 @@ describe("Transaction", () => {
     expect(transaction).toHaveProperty("id");
   });
 
-  it("has output map", () => {
-    expect(transaction).toHaveProperty("outputMap");
+  describe("outputMap", () => {
+    it("has output map", () => {
+      expect(transaction).toHaveProperty("outputMap");
+    });
+
+    it("output the amout of recipient", () => {
+      expect(transaction.outputMap[recipeint]).toHaveProperty(amount);
+    });
+
+    it("output the amout of sender", () => {
+      let balance: any = senderWallet.balance - amount;
+      expect(transaction.outputMap[senderWallet.publicKey]).toHaveProperty(
+        balance
+      );
+    });
   });
 });
