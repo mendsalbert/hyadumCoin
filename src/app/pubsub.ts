@@ -1,13 +1,20 @@
+// import Blockchain from "../blockchain";
+
+import Blockchain from "../blockchain";
+import { Blockchain_ } from "../utils/Interfaces";
+
 const redis = require("redis");
 
 const CHANNEL = {
   TEST: "TEST",
   BLOCKCHIAN: "BLOCKCHAIN",
 };
+
 class PubSub {
   subscriber: any;
   publisher: any;
-  blockchain: any;
+
+  blockchain: Blockchain;
   constructor({ blockchain }: any) {
     this.blockchain = blockchain;
     this.subscriber = redis.createClient();

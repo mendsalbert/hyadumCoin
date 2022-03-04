@@ -20,3 +20,10 @@ export interface block {
   nonce: number;
   difficulty: number;
 }
+
+export interface Blockchain_ {
+  chain: any[];
+  addBlock({ data }: any): void;
+  replaceChain(chain: any): any;
+  isValidChain(chain: any): boolean;
+}

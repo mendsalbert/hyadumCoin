@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import Blockchain from "./blockchain";
 import PubSub from "./app/pubsub";
+import { Blockchain_ } from "./utils/Interfaces";
 const request = require("request");
 const app: Application = express();
 
