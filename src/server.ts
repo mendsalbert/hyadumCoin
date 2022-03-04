@@ -4,7 +4,12 @@ import PubSub from "./pubsub";
 const app: Application = express();
 
 const blockchain = new Blockchain();
-const port = 3000;
+const DEFAULT_PORT = 3000;
+let PEER_PORT;
+if (process.env.GENERATE_PEER_PORT === "true") {
+  PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
+}
+const port = PEER_PORT || DEFAULT_PORT;
 
 const pubsub = new PubSub({ blockchain });
 
@@ -23,6 +28,7 @@ app.get("/api/blocks", (req: Request, res: Response) => {
 app.post("/api/mine", (req: Request, res: Response) => {
   const { data } = req.body;
   blockchain.addBlock({ data });
+  pubsub.broadcastChain();
   res.redirect("/api/blocks");
 });
 
