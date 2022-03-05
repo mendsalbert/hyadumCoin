@@ -14,6 +14,10 @@ class TransactionPool {
     });
   }
 
+  setMap(transactionPoll: TransactionPool) {
+    this.transactionMap = transactionPoll;
+  }
+
   setTransaction(transaction: any) {
     this.transactionMap[transaction.id] = transaction;
   }

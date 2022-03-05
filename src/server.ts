@@ -48,12 +48,14 @@ app.post("/api/transact", (req: Request, res: Response) => {
     } else {
       transaction = wallet.createTransction(recipient, amount);
     }
-    transactionPoll.setTransaction(transaction);
-    res.json({ transaction });
-    pubsub.broadcastTransaction(transaction);
   } catch (error) {
+    console.log(error);
     res.json({ type: "error", message: "Insuficient amount" });
   }
+
+  transactionPoll.setTransaction(transaction);
+  res.json({ transaction });
+  pubsub.broadcastTransaction(transaction);
 });
 
 app.get("/api/transaction-poll", (req: Request, res: Response) => {
@@ -68,8 +70,19 @@ const syncChains = () => {
     (error: any, response: any, body: any) => {
       if (!error && response.statusCode === 200) {
         const chain = JSON.parse(body);
-        console.log(chain);
+        // console.log(chain);
         blockchain.replaceChain(chain);
+      }
+    }
+  );
+
+  request(
+    { url: `${ROOT_NODE_ADDERSS}/api/transaction-poll` },
+    (error: any, response: any, body: any) => {
+      if (!error && response.statusCode === 200) {
+        const rootTransactionPoolMap = JSON.parse(body);
+        transactionPoll.setMap(rootTransactionPoolMap.transactionPoll);
+        console.log(rootTransactionPoolMap.transactionPoll);
       }
     }
   );
