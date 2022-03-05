@@ -42,7 +42,6 @@ app.post("/api/transact", (req: Request, res: Response) => {
 
   let transaction: any = transactionPoll.existingTransaction(wallet.publicKey);
 
-  // console.log(transaction);
   try {
     if (transaction) {
       transaction.update(wallet, recipient, amount);
@@ -51,6 +50,7 @@ app.post("/api/transact", (req: Request, res: Response) => {
     }
     transactionPoll.setTransaction(transaction);
     res.json({ transaction });
+    pubsub.broadcastTransaction(transaction);
   } catch (error) {
     res.json({ type: "error", message: "Insuficient amount" });
   }
