@@ -3,11 +3,13 @@ import TransactionPool from "../wallet/TransactionPoll";
 import Transaction from "../wallet/Transactions";
 
 describe("TransactionPool", () => {
-  let transactionPool: TransactionPool, transaction: Transaction;
+  let transactionPool: TransactionPool,
+    transaction: Transaction,
+    senderWallet: Wallet;
 
   beforeEach(() => {
     transactionPool = new TransactionPool();
-    let senderWallet = new Wallet();
+    senderWallet = new Wallet();
     transaction = new Transaction(senderWallet, "fake-recipient", 50);
   });
 

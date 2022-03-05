@@ -1,11 +1,10 @@
 import Transaction from "./Transactions";
 
 class TransactionPool {
-  transaction: any;
   transactionMap: any;
 
   constructor() {
-    this.transaction = {};
+    this.transactionMap = {};
   }
 
   setTransaction(transaction: Transaction) {

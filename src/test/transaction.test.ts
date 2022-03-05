@@ -1,3 +1,4 @@
+import { send } from "process";
 import Wallet from "../wallet/Index";
 import Transaction from "../wallet/Transactions";
 
@@ -10,7 +11,8 @@ describe("Transaction", () => {
   beforeEach(() => {
     recipeint = "recipient-public-key";
     amount = 50;
-    transaction = new Transaction(new Wallet(), recipeint, amount);
+    senderWallet = new Wallet();
+    transaction = new Transaction(senderWallet, recipeint, amount);
   });
 
   it("has an id", () => {
@@ -27,8 +29,9 @@ describe("Transaction", () => {
     });
 
     it("output the amout of sender", () => {
-      let balance: any = senderWallet.balance - amount;
-      expect(transaction.outputMap[senderWallet.publicKey]).toEqual(balance);
+      expect(transaction.outputMap[senderWallet.publicKey]).toEqual(
+        senderWallet.balance - amount
+      );
     });
   });
 });
