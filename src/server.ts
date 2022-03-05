@@ -56,6 +56,12 @@ app.post("/api/transact", (req: Request, res: Response) => {
   }
 });
 
+app.get("/api/transaction-poll", (req: Request, res: Response) => {
+  res.status(200).json({
+    transactionPoll: transactionPoll.transactionMap,
+  });
+});
+
 const syncChains = () => {
   request(
     { url: `${ROOT_NODE_ADDERSS}/api/blocks` },
