@@ -38,13 +38,17 @@ app.post("/api/mine", (req: Request, res: Response) => {
 
 app.post("/api/transact", (req: Request, res: Response) => {
   const { recipient, amount } = req.body;
-  const transaction = wallet.createTransction(recipient, amount);
-  transactionPoll.setTransaction(transaction);
-  // console.log(transactionPoll);
+  try {
+    const transaction = wallet.createTransction(recipient, amount);
+    transactionPoll.setTransaction(transaction);
+    // console.log(transactionPoll);
 
-  let transactions: any = res.json({ transaction });
-  if (transactionPoll.transactionMap[transactions.id]) {
-    transaction?.update(wallet, recipient, amount);
+    let transactions: any = res.json({ transaction });
+    if (transactionPoll.transactionMap[transactions.id]) {
+      transaction?.update(wallet, recipient, amount);
+    }
+  } catch (error) {
+    res.json({ type: "error", message: "Insuficient amount" });
   }
 });
 
