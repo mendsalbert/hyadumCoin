@@ -31,6 +31,18 @@ class Transaction {
       signature: senderWallet.sign(outputMap),
     };
   }
+
+  //   vali dateTransaction  (){
+  //get the public key of the sender.
+  //use the verify function to verify the user
+  //get data.
+  //   }
 }
+
+let senderWallet = new Wallet();
+let recipeint = "recipient-public-key";
+let amount = 50;
+let transaction = new Transaction(senderWallet, recipeint, amount);
+console.log("transactions=====", transaction);
 
 export default Transaction;
