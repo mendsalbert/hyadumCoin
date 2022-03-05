@@ -1,7 +1,4 @@
-import { addEmitHelper } from "typescript";
 import { STARTING_BALANCE } from "../config";
-// import ec from "../utils";
-// import {ec}  from 'elliptic'
 import { ec } from "../utils";
 import cryptoHash from "../utils/cryto-hash";
 import Transaction from "../wallet/Transactions";
