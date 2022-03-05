@@ -33,6 +33,13 @@ class Transaction {
     };
   }
 
+  update(senderWallet: Wallet, recipeint: string, amount: number) {
+    this.outputMap[recipeint] = amount;
+    this.outputMap[senderWallet.publicKey] =
+      this.outputMap[senderWallet.publicKey] - amount;
+    this.input = this.createInput(senderWallet, this.outputMap);
+  }
+
   static validateTransaction(transaction: Transaction) {
     const {
       input: { amount, address, signature },
