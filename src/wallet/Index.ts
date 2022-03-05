@@ -1,9 +1,10 @@
+import { addEmitHelper } from "typescript";
 import { STARTING_BALANCE } from "../config";
 // import ec from "../utils";
 // import {ec}  from 'elliptic'
 import { ec } from "../utils";
 import cryptoHash from "../utils/cryto-hash";
-
+import Transaction from "../wallet/Transactions";
 class Wallet {
   balance: number;
   publicKey: string;
@@ -17,6 +18,14 @@ class Wallet {
   sign(data: string) {
     cryptoHash();
     return this.keypair.sign(cryptoHash(data));
+  }
+
+  createTransaction(recipient: string, amount: number) {
+    if (amount > this.balance) {
+      console.log("balance is insuficient");
+      return;
+    }
+    return new Transaction(this, recipient, amount);
   }
 }
 
