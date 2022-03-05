@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "release": "standard-version",
-    "start": "nodemon ./src/wallet/Transactions.ts",
+    "start": "nodemon ./src/wallet/Index.ts",
     "dev": "nodemon ./src/server.ts",
     "dev-peer": "cross-env GENERATE_PEER_PORT='true' nodemon ./src/server.ts",
     "test": "jest --watchAll",

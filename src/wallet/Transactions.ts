@@ -1,4 +1,3 @@
-import { send } from "process";
 import { verifySignature } from "../utils";
 import Wallet from "./Index";
 const uuid = require("uuid/v1");
@@ -8,9 +7,9 @@ interface Transaction {
   amount: number;
 }
 class Transaction {
-  id: string;
-  outputMap: any;
-  input: any;
+  public id: string;
+  public outputMap: any;
+  public input: any;
   constructor(senderWallet: Wallet, recipient: string, amount: number) {
     this.id = uuid();
     this.outputMap = this.createOutputMap(senderWallet, recipient, amount);
@@ -74,12 +73,5 @@ class Transaction {
     return true;
   }
 }
-
-let senderWallet = new Wallet();
-let recipeint = "recipient-public-key";
-let amount = 50;
-let transaction = new Transaction(senderWallet, recipeint, amount);
-// console.log("transactions=====", transaction);
-console.log(Transaction.validateTransaction(transaction));
 
 export default Transaction;

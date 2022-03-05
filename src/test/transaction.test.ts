@@ -8,10 +8,9 @@ describe("Transaction", () => {
     amount: any;
 
   beforeEach(() => {
-    senderWallet = new Wallet();
     recipeint = "recipient-public-key";
     amount = 50;
-    transaction = new Transaction(senderWallet, recipeint, amount);
+    transaction = new Transaction(new Wallet(), recipeint, amount);
   });
 
   it("has an id", () => {
