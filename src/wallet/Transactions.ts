@@ -34,7 +34,15 @@ class Transaction {
   }
 
   update(senderWallet: Wallet, recipeint: string, amount: number) {
-    this.outputMap[recipeint] = amount;
+    if (amount > this.outputMap[senderWallet.publicKey]) {
+      return;
+    }
+
+    if (!this.outputMap[recipeint]) {
+      this.outputMap[recipeint] = amount;
+    } else {
+      this.outputMap[recipeint] = this.outputMap[recipeint] + amount;
+    }
     this.outputMap[senderWallet.publicKey] =
       this.outputMap[senderWallet.publicKey] - amount;
     this.input = this.createInput(senderWallet, this.outputMap);
