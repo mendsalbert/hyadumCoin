@@ -5,6 +5,7 @@ import { Blockchain_ } from "./utils/Interfaces";
 import Wallet from "./wallet/Index";
 import TransactionPool from "./wallet/TransactionPoll";
 import Transaction from "./wallet/Transactions";
+import e from "express";
 const request = require("request");
 const app: Application = express();
 
@@ -38,15 +39,18 @@ app.post("/api/mine", (req: Request, res: Response) => {
 
 app.post("/api/transact", (req: Request, res: Response) => {
   const { recipient, amount } = req.body;
-  try {
-    const transaction = wallet.createTransction(recipient, amount);
-    transactionPoll.setTransaction(transaction);
-    // console.log(transactionPoll);
 
-    let transactions: any = res.json({ transaction });
-    if (transactionPoll.transactionMap[transactions.id]) {
-      transaction?.update(wallet, recipient, amount);
+  let transaction: any = transactionPoll.existingTransaction(wallet.publicKey);
+
+  console.log(transaction);
+  try {
+    if (transaction) {
+      transaction.update(wallet, recipient, amount);
+    } else {
+      transaction = wallet.createTransction(recipient, amount);
     }
+    transactionPoll.setTransaction(transaction);
+    res.json({ transaction });
   } catch (error) {
     res.json({ type: "error", message: "Insuficient amount" });
   }
