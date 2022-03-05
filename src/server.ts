@@ -19,7 +19,7 @@ if (process.env.GENERATE_PEER_PORT === "true") {
 }
 const port = PEER_PORT || DEFAULT_PORT;
 const ROOT_NODE_ADDERSS = `http://localhost:${DEFAULT_PORT}`;
-const pubsub = new PubSub(blockchain);
+const pubsub = new PubSub(blockchain, transactionPoll);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -42,7 +42,7 @@ app.post("/api/transact", (req: Request, res: Response) => {
 
   let transaction: any = transactionPoll.existingTransaction(wallet.publicKey);
 
-  console.log(transaction);
+  // console.log(transaction);
   try {
     if (transaction) {
       transaction.update(wallet, recipient, amount);
