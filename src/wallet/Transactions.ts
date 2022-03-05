@@ -1,4 +1,5 @@
 import { send } from "process";
+import { verifySignature } from "../utils";
 import Wallet from "./Index";
 const uuid = require("uuid/v1");
 interface Transaction {
@@ -32,17 +33,38 @@ class Transaction {
     };
   }
 
-  //   vali dateTransaction  (){
-  //get the public key of the sender.
-  //use the verify function to verify the user
-  //get data.
-  //   }
+  static validateTransaction(transaction: Transaction) {
+    const {
+      input: { amount, address, signature },
+      outputMap,
+    } = transaction;
+
+    const outputTotal = Object.values(outputMap).reduce(
+      (total: any, outputAmount: any) => total + outputAmount
+    );
+
+    if (amount !== outputTotal) {
+      return false;
+    }
+    if (
+      !verifySignature({
+        publicKey: address,
+        data: outputMap,
+        signature: signature,
+      })
+    ) {
+      return false;
+    }
+
+    return true;
+  }
 }
 
 let senderWallet = new Wallet();
 let recipeint = "recipient-public-key";
 let amount = 50;
 let transaction = new Transaction(senderWallet, recipeint, amount);
-console.log("transactions=====", transaction);
+// console.log("transactions=====", transaction);
+console.log(Transaction.validateTransaction(transaction));
 
 export default Transaction;
