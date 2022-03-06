@@ -1,19 +1,24 @@
 import { send } from "process";
+import { isBuffer } from "util";
+import Blockchain from "../blockchain";
 import { MINED_REWARD, REWARD_INPUT } from "../config";
 import Wallet from "../wallet/Index";
+import TransactionPool from "../wallet/TransactionPoll";
 import Transaction from "../wallet/Transactions";
 
 describe("Transaction", () => {
   let transaction: Transaction,
     senderWallet: Wallet,
     recipeint: string,
-    amount: any;
+    amount: any,
+    transactionPool: TransactionPool;
 
   beforeEach(() => {
     recipeint = "recipient-public-key";
     amount = 50;
     senderWallet = new Wallet();
     transaction = new Transaction(senderWallet, recipeint, amount);
+    transactionPool = new TransactionPool();
   });
 
   it("has an id", () => {
@@ -52,6 +57,25 @@ describe("Transaction", () => {
       expect(rewardTransaction.outputMap[minerWallet.publicKey]).toEqual(
         MINED_REWARD
       );
+    });
+  });
+
+  describe("clearBlockchainTransactions", () => {
+    it("clears the pool of any existig blockchain transactions", () => {
+      const blockchain: Blockchain = new Blockchain();
+      const expectedTransactionMap: any = {};
+      for (let i = 0; i < 6; i++) {
+        const transc: any = new Wallet().createTransction("foo", 20);
+        transactionPool.setTransaction(transc);
+        if (i % 2 === 0) {
+          blockchain.addBlock({ data: [transc] });
+        } else {
+          expectedTransactionMap[transc.id] = transc;
+        }
+      }
+
+      transactionPool.clearBlockchainTransactions(blockchain.chain);
+      expect(transactionPool.transactionMap).toEqual(expectedTransactionMap);
     });
   });
 });

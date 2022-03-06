@@ -30,6 +30,17 @@ class TransactionPool {
       Transaction.validateTransaction(transaction)
     );
   }
+
+  clearBlockchainTransactions(chain: any) {
+    for (var i = 1; i < chain.length; i++) {
+      let block = chain[i];
+      for (let transaction of block.data) {
+        if (this.transactionMap[transaction.id]) {
+          delete this.transactionMap[transaction.id];
+        }
+      }
+    }
+  }
 }
 
 export default TransactionPool;
