@@ -1,6 +1,7 @@
 import Blockchain from "../blockchain";
 import Wallet from "../wallet/Index";
 import TransactionPool from "../wallet/TransactionPoll";
+import Transaction from "../wallet/Transactions";
 import PubSub from "./pubsub";
 
 class TransactionMiner {
@@ -22,11 +23,15 @@ class TransactionMiner {
   }
 
   mineTransactions() {
-    //get all valid transactions from transaction pool
-    //generate the miner;s reware
-    //add a block consisting of these transactions to the blockchian
-    //broacast the updated blockchain
-    //clear transaction poop
+    const validTransactions = this.transactionPoll.validTransactions();
+
+    validTransactions.push(Transaction.rewardTransaction(this.wallet));
+
+    this.blockchain.addBlock({ data: validTransactions });
+
+    this.pubSub.broadcastChain();
+
+    this.transactionPoll.clear();
   }
 }
 
