@@ -1,3 +1,4 @@
+import { MINED_REWARD, REWARD_INPUT } from "../config";
 import { verifySignature } from "../utils";
 import Wallet from "./Index";
 const uuid = require("uuid/v1");
@@ -10,10 +11,17 @@ class Transaction {
   public id: string;
   public outputMap: any;
   public input: any;
-  constructor(senderWallet: Wallet, recipient: string, amount: number) {
+  constructor(
+    senderWallet: Wallet = new Wallet(),
+    recipient: string = "",
+    amount: number = 0,
+    outputMap: any = "",
+    input: any = ""
+  ) {
     this.id = uuid();
-    this.outputMap = this.createOutputMap(senderWallet, recipient, amount);
-    this.input = this.createInput(senderWallet, this.outputMap);
+    this.outputMap =
+      outputMap || this.createOutputMap(senderWallet, recipient, amount);
+    this.input = input || this.createInput(senderWallet, this.outputMap);
   }
 
   createOutputMap(senderWallet: Wallet, recipient: string, amount: number) {
@@ -71,6 +79,19 @@ class Transaction {
     }
 
     return true;
+  }
+
+  static rewardTransaction(minerWallet: Wallet) {
+    return new this(
+      minerWallet,
+      "",
+      0,
+      {
+        [minerWallet.publicKey]: MINED_REWARD,
+      },
+      REWARD_INPUT
+    );
+    // return new this(minerWallet, REWARD_INPUT.address, MINED_REWARD);
   }
 }
 
