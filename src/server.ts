@@ -1,17 +1,25 @@
 import express, { Application, Request, Response } from "express";
 import Blockchain from "./blockchain";
 import PubSub from "./app/pubsub";
-import { Blockchain_ } from "./utils/Interfaces";
 import Wallet from "./wallet/Index";
 import TransactionPool from "./wallet/TransactionPoll";
 import Transaction from "./wallet/Transactions";
-import e from "express";
+import TransactionMiner from "./app/TransactionMiner";
+import { resourceUsage } from "process";
 const request = require("request");
 const app: Application = express();
 
 const blockchain: Blockchain = new Blockchain();
-const wallet = new Wallet();
+const wallet: Wallet = new Wallet();
 const transactionPoll: TransactionPool = new TransactionPool();
+const pubsub: PubSub = new PubSub(blockchain, transactionPoll);
+const transactionMiner: TransactionMiner = new TransactionMiner(
+  blockchain,
+  transactionPoll,
+  wallet,
+  pubsub
+);
+
 const DEFAULT_PORT = 3000;
 let PEER_PORT;
 if (process.env.GENERATE_PEER_PORT === "true") {
@@ -19,7 +27,6 @@ if (process.env.GENERATE_PEER_PORT === "true") {
 }
 const port = PEER_PORT || DEFAULT_PORT;
 const ROOT_NODE_ADDERSS = `http://localhost:${DEFAULT_PORT}`;
-const pubsub = new PubSub(blockchain, transactionPoll);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -48,20 +55,26 @@ app.post("/api/transact", (req: Request, res: Response) => {
     } else {
       transaction = wallet.createTransction(recipient, amount);
     }
-  } catch (error) {
-    console.log(error);
-    res.json({ type: "error", message: "Insuficient amount" });
-  }
 
-  transactionPoll.setTransaction(transaction);
-  res.json({ transaction });
-  pubsub.broadcastTransaction(transaction);
+    transactionPoll.setTransaction(transaction);
+
+    pubsub.broadcastTransaction(transaction);
+    res.json(transaction);
+    return;
+  } catch (error) {
+    res.json({ type: "error", message: error });
+  }
 });
 
 app.get("/api/transaction-poll", (req: Request, res: Response) => {
   res.status(200).json({
     transactionPoll: transactionPoll.transactionMap,
   });
+});
+
+app.get("/api/mine-transaction", (req: Request, res: Response) => {
+  transactionMiner.mineTransactions();
+  res.redirect("/api/blocks");
 });
 
 const syncChains = () => {
