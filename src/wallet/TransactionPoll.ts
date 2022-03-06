@@ -21,6 +21,12 @@ class TransactionPool {
   setTransaction(transaction: any) {
     this.transactionMap[transaction.id] = transaction;
   }
+
+  validTransactions() {
+    return Object.values(this.transactionMap).filter((transaction: any) =>
+      Transaction.validateTransaction(transaction)
+    );
+  }
 }
 
 export default TransactionPool;
