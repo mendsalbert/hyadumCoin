@@ -17,7 +17,10 @@ class Wallet {
     return this.keypair.sign(cryptoHash(data));
   }
 
-  createTransction(recipient: string, amount: number) {
+  createTransction(recipient: string, amount: number, chain: any) {
+    if (chain) {
+      this.balance = Wallet.calculateBalance(chain, this.publicKey);
+    }
     if (amount > this.balance) {
       console.log("balance is not enough");
       return;
