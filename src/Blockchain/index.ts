@@ -74,6 +74,11 @@ class Blockchain {
       console.error("the incoming chain must be valid");
       return;
     }
+
+    if (!this.validateTransactionData(chain)) {
+      return false;
+    }
+
     if (onSuccess) {
       onSuccess();
     }
