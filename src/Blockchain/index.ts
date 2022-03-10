@@ -2,6 +2,8 @@ import Block from "./block";
 import cryptoHash from "../utils/cryto-hash";
 import { MINED_REWARD, REWARD_INPUT } from "../config";
 import Transaction from "../wallet/Transactions";
+import Wallet from "../wallet/Index";
+
 class Blockchain {
   chain: any[];
 
@@ -22,8 +24,11 @@ class Blockchain {
     for (var i = 0; i < chain.length; i++) {
       const block = chain[i];
       let rewardTransactionCount = 0;
+      let transactionSet = new Set();
       for (let transaction of block.data) {
         if (transaction.input.address === REWARD_INPUT.address) {
+          rewardTransactionCount += 1;
+
           if (rewardTransactionCount > 1) {
             return false;
           }
@@ -34,6 +39,25 @@ class Blockchain {
         } else {
           if (!Transaction.validateTransaction(transaction)) {
             return false;
+          }
+
+          const trueBalance = Wallet.calculateBalance(
+            this.chain,
+            transaction.input.address
+          );
+
+          if (transaction.input.amout !== trueBalance) {
+            console.log("invalid input amount");
+
+            return false;
+          }
+
+          //prevent duplicate transactions
+          if (transactionSet.has(transaction)) {
+            console.log("duplicate transactions");
+            return false;
+          } else {
+            transactionSet.add(transaction);
           }
         }
       }
