@@ -50,7 +50,9 @@ class Wallet {
       }
     }
 
-    return STARTING_BALANCE + totalBalance;
+    return hasConductedTransaction
+      ? totalBalance
+      : STARTING_BALANCE + totalBalance;
   }
 }
 
