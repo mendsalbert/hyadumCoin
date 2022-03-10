@@ -53,7 +53,7 @@ app.post("/api/transact", (req: Request, res: Response) => {
     if (transaction) {
       transaction.update(wallet, recipient, amount);
     } else {
-      transaction = wallet.createTransction(recipient, amount);
+      transaction = wallet.createTransction(recipient, amount, blockchain);
     }
 
     transactionPoll.setTransaction(transaction);

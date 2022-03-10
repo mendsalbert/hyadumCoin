@@ -17,8 +17,8 @@ class Wallet {
     return this.keypair.sign(cryptoHash(data));
   }
 
-  createTransction(recipient: string, amount: number, chain: any) {
-    if (chain) {
+  createTransction(recipient: string, amount: number, chain: any = "") {
+    if (chain.length > 0) {
       this.balance = Wallet.calculateBalance(chain, this.publicKey);
     }
     if (amount > this.balance) {
@@ -31,14 +31,22 @@ class Wallet {
 
   static calculateBalance(chain: any, address: string) {
     let totalBalance: any;
-    for (let i = 0; i < chain.length; i++) {
-      let block = chain[i];
+    let hasConductedTransaction: boolean = false;
 
+    for (let i = chain.length - 1; i > 0; i--) {
+      let block = chain[i];
       for (let transaction of block.data) {
+        if (transaction.input.address === address) {
+          hasConductedTransaction = true;
+        }
         let addressOutput = transaction.outputMap[address];
         if (addressOutput) {
           totalBalance = totalBalance + addressOutput;
         }
+      }
+
+      if (hasConductedTransaction) {
+        break;
       }
     }
 
