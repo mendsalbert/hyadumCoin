@@ -65,7 +65,11 @@ class Blockchain {
 
     return true;
   }
-  replaceChain(chain: any, onSuccess: any = "") {
+  replaceChain(
+    chain: any,
+    validateTransactions: boolean = false,
+    onSuccess: any = ""
+  ) {
     if (chain.length <= this.chain.length) {
       console.error("the incoming chain must be long");
       return;
@@ -75,7 +79,7 @@ class Blockchain {
       return;
     }
 
-    if (!this.validateTransactionData(chain)) {
+    if (validateTransactions && !this.validateTransactionData(chain)) {
       return false;
     }
 
