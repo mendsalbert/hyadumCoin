@@ -1,6 +1,7 @@
 import Block from "./block";
 import cryptoHash from "../utils/cryto-hash";
-import { block } from "../utils/Interfaces";
+import { MINED_REWARD, REWARD_INPUT } from "../config";
+import Transaction from "../wallet/Transactions";
 class Blockchain {
   chain: any[];
 
@@ -17,6 +18,29 @@ class Blockchain {
     this.chain.push(newBlock);
   }
 
+  validateTransactionData(chain: any) {
+    for (var i = 0; i < chain.length; i++) {
+      const block = chain[i];
+      let rewardTransactionCount = 0;
+      for (let transaction of block.data) {
+        if (transaction.input.address === REWARD_INPUT.address) {
+          if (rewardTransactionCount > 1) {
+            return false;
+          }
+
+          if (Object.values(transaction.outputTotal)[0] !== MINED_REWARD) {
+            return false;
+          }
+        } else {
+          if (!Transaction.validateTransaction(transaction)) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
   replaceChain(chain: any, onSuccess: any = "") {
     if (chain.length <= this.chain.length) {
       console.error("the incoming chain must be long");
@@ -32,6 +56,7 @@ class Blockchain {
     console.log("replacing chian with", chain);
     this.chain = chain;
   }
+
   static isValidChain(chain: any) {
     if (JSON.stringify(chain[0]) !== JSON.stringify(Block.genesis())) {
       return false;
@@ -64,12 +89,5 @@ class Blockchain {
     return true;
   }
 }
-
-const blockchain = new Blockchain();
-// blockchain.addBlock({ data: "mends albert" });
-// blockchain.addBlock({ data: "elon musk" });
-// blockchain.addBlock({ data: "steve jobs" });
-// blockchain.addBlock({ data: "bill gates" });
-// console.log((blockchain.chain[0] = { data: "new data" }));
 
 export default Blockchain;

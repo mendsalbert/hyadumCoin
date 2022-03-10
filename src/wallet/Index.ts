@@ -30,7 +30,7 @@ class Wallet {
   }
 
   static calculateBalance(chain: any, address: string) {
-    let totalBalance: any;
+    let totalBalance = 0;
     let hasConductedTransaction: boolean = false;
 
     for (let i = chain.length - 1; i > 0; i--) {
