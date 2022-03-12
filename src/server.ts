@@ -6,6 +6,7 @@ import TransactionPool from "./wallet/TransactionPoll";
 import Transaction from "./wallet/Transactions";
 import TransactionMiner from "./app/TransactionMiner";
 import { resourceUsage } from "process";
+import e from "express";
 const request = require("request");
 const app: Application = express();
 
@@ -20,7 +21,8 @@ const transactionMiner: TransactionMiner = new TransactionMiner(
   pubsub
 );
 
-const DEFAULT_PORT = 3000;
+const DEFAULT_PORT = 3002;
+
 let PEER_PORT;
 if (process.env.GENERATE_PEER_PORT === "true") {
   PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
@@ -107,6 +109,40 @@ const syncChains = () => {
     }
   );
 };
+
+const walletFoo = new Wallet();
+const walletBar = new Wallet();
+
+const generateWalletTransaction = (wallet: any, recipient: any, amout: any) => {
+  const transaction = wallet.createTransction(
+    recipient,
+    amout,
+    blockchain.chain
+  );
+  transactionPoll.setTransaction(transaction);
+};
+
+const walletAction = () =>
+  generateWalletTransaction(wallet, walletFoo.publicKey, 5);
+const walletFooAction = () =>
+  generateWalletTransaction(wallet, walletBar.publicKey, 10);
+const walletBarAction = () =>
+  generateWalletTransaction(wallet, wallet.publicKey, 20);
+
+for (let i = 0; i < 10; i++) {
+  if (i % 3 === 0) {
+    walletAction();
+    walletFooAction();
+  } else if (i % 3 === 1) {
+    walletAction();
+    walletBarAction();
+  } else {
+    walletFooAction();
+    walletBarAction();
+  }
+
+  transactionMiner.mineTransactions();
+}
 
 try {
   app.listen(port, (): void => {
