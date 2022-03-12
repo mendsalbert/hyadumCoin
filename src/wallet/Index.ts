@@ -24,9 +24,8 @@ class Wallet {
     if (amount > this.balance) {
       console.log("balance is not enough");
       return;
-    } else {
-      return new Transaction(this, recipient, amount);
     }
+    return new Transaction(this, recipient, amount);
   }
 
   static calculateBalance(chain: any, address: string) {

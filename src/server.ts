@@ -46,7 +46,7 @@ app.post("/api/mine", (req: Request, res: Response) => {
   res.redirect("/api/blocks");
 });
 
-app.post("/api/transact", (req: Request, res: Response) => {
+app.post("/api/transact", async (req: Request, res: Response) => {
   const { recipient, amount } = req.body;
 
   let transaction: any = transactionPoll.existingTransaction(wallet.publicKey);
@@ -55,17 +55,15 @@ app.post("/api/transact", (req: Request, res: Response) => {
     if (transaction) {
       transaction.update(wallet, recipient, amount);
     } else {
-      transaction = wallet.createTransction(recipient, amount, blockchain);
+      transaction = wallet.createTransction(recipient, amount);
     }
-
-    transactionPoll.setTransaction(transaction);
-
-    pubsub.broadcastTransaction(transaction);
-    res.json(transaction);
-    return;
-  } catch (error) {
-    res.json({ type: "error", message: error });
+  } catch (error: any) {
+    return res.status(400).json({ type: "error", message: error.message });
   }
+
+  transactionPoll.setTransaction(transaction);
+  // pubsub.broadcastTransaction(transaction);
+  res.json({ type: "success", transaction });
 });
 
 app.get("/api/transaction-poll", (req: Request, res: Response) => {
