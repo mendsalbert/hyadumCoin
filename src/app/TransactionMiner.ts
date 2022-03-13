@@ -1,4 +1,4 @@
-import Blockchain from "../blockchain/index";
+import Blockchain from "../Blockchain/index";
 import Wallet from "../wallet/Index";
 import TransactionPool from "../wallet/TransactionPoll";
 import Transaction from "../wallet/Transactions";

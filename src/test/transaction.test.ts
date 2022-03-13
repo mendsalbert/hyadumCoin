@@ -1,6 +1,4 @@
-import { send } from "process";
-import { isBuffer } from "util";
-import Blockchain from "../blockchain";
+import Blockchain from "../Blockchain/index";
 import { MINED_REWARD, REWARD_INPUT } from "../config";
 import Wallet from "../wallet/Index";
 import TransactionPool from "../wallet/TransactionPoll";

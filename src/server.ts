@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from "express";
-import Blockchain from "./blockchain/index";
+// import Blockchain from "./blockchain/index";
+import Blockchain from "./Blockchain/index";
 import PubSub from "./app/pubsub";
 import Wallet from "./wallet/Index";
 import TransactionPool from "./wallet/TransactionPoll";

@@ -1,4 +1,4 @@
-import Blockchain from "../blockchain/index";
+import Blockchain from "../Blockchain/index";
 import TransactionPool from "../wallet/TransactionPoll";
 
 const redis = require("redis");
