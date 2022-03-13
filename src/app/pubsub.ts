@@ -13,10 +13,24 @@ class PubSub {
   publisher: any;
   transaction: any;
   blockchain: Blockchain;
-  constructor(blockchain: Blockchain, transaction: TransactionPool) {
+  constructor(
+    blockchain: Blockchain,
+    transaction: TransactionPool,
+    redisUrl: any,
+    redisPort: any,
+    redisPassword: any
+  ) {
     this.blockchain = blockchain;
-    this.subscriber = redis.createClient();
-    this.publisher = redis.createClient();
+    this.subscriber = redis.createClient({
+      host: redisUrl,
+      port: redisPort,
+      password: redisPassword,
+    });
+    this.publisher = redis.createClient({
+      host: redisUrl,
+      port: redisPort,
+      password: redisPassword,
+    });
     this.transaction = transaction;
     this.subscribeToChanels();
 
