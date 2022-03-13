@@ -5,8 +5,9 @@ import Wallet from "./wallet/Index";
 import TransactionPool from "./wallet/TransactionPoll";
 import Transaction from "./wallet/Transactions";
 import TransactionMiner from "./app/TransactionMiner";
-import { resourceUsage } from "process";
-import e from "express";
+
+const isDevelopment = process.env.ENV === "development";
+
 const request = require("request");
 const app: Application = express();
 
@@ -27,11 +28,15 @@ let PEER_PORT;
 if (process.env.GENERATE_PEER_PORT === "true") {
   PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
 }
-const port = PEER_PORT || DEFAULT_PORT;
+const port = process.env.PORT || PEER_PORT || DEFAULT_PORT;
 const ROOT_NODE_ADDERSS = `http://localhost:${DEFAULT_PORT}`;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get("/", (req: Request, res: Response) => {
+  res.send("home page");
+});
 
 app.get("/api/blocks", (req: Request, res: Response) => {
   res.status(200).json({
@@ -108,38 +113,44 @@ const syncChains = () => {
   );
 };
 
-const walletFoo = new Wallet();
-const walletBar = new Wallet();
+if (isDevelopment) {
+  const walletFoo = new Wallet();
+  const walletBar = new Wallet();
 
-const generateWalletTransaction = (wallet: any, recipient: any, amout: any) => {
-  const transaction = wallet.createTransction(
-    recipient,
-    amout,
-    blockchain.chain
-  );
-  transactionPoll.setTransaction(transaction);
-};
+  const generateWalletTransaction = (
+    wallet: any,
+    recipient: any,
+    amout: any
+  ) => {
+    const transaction = wallet.createTransction(
+      recipient,
+      amout,
+      blockchain.chain
+    );
+    transactionPoll.setTransaction(transaction);
+  };
 
-const walletAction = () =>
-  generateWalletTransaction(wallet, walletFoo.publicKey, 5);
-const walletFooAction = () =>
-  generateWalletTransaction(wallet, walletBar.publicKey, 10);
-const walletBarAction = () =>
-  generateWalletTransaction(wallet, wallet.publicKey, 20);
+  const walletAction = () =>
+    generateWalletTransaction(wallet, walletFoo.publicKey, 5);
+  const walletFooAction = () =>
+    generateWalletTransaction(wallet, walletBar.publicKey, 10);
+  const walletBarAction = () =>
+    generateWalletTransaction(wallet, wallet.publicKey, 20);
 
-for (let i = 0; i < 10; i++) {
-  if (i % 3 === 0) {
-    walletAction();
-    walletFooAction();
-  } else if (i % 3 === 1) {
-    walletAction();
-    walletBarAction();
-  } else {
-    walletFooAction();
-    walletBarAction();
+  for (let i = 0; i < 10; i++) {
+    if (i % 3 === 0) {
+      walletAction();
+      walletFooAction();
+    } else if (i % 3 === 1) {
+      walletAction();
+      walletBarAction();
+    } else {
+      walletFooAction();
+      walletBarAction();
+    }
+
+    transactionMiner.mineTransactions();
   }
-
-  transactionMiner.mineTransactions();
 }
 
 try {
