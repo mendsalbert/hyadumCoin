@@ -6,7 +6,7 @@ import Wallet from "./wallet/Index";
 import TransactionPool from "./wallet/TransactionPoll";
 import Transaction from "./wallet/Transactions";
 import TransactionMiner from "./app/TransactionMiner";
-
+import path from "path";
 const isDevelopment = process.env.ENV === "development";
 const REDIS_URL = isDevelopment
   ? "redis://127.0.0.1:3679"
@@ -45,9 +45,9 @@ const transactionMiner: TransactionMiner = new TransactionMiner(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("home page");
-});
+// app.get("/", (req: Request, res: Response) => {
+//   res.send("home page");
+// });
 
 app.get("/api/blocks", (req: Request, res: Response) => {
   res.status(200).json({
@@ -78,7 +78,7 @@ app.post("/api/transact", async (req: Request, res: Response) => {
   }
 
   transactionPoll.setTransaction(transaction);
-  // pubsub.broadcastTransaction(transaction);
+  pubsub.broadcastTransaction(transaction);
   res.json({ type: "success", transaction });
 });
 
@@ -100,6 +100,11 @@ app.get("/api/wallet-info", (req: Request, res: Response) => {
     balance: Wallet.calculateBalance(blockchain.chain, address),
   });
 });
+
+app.get("*", (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, "./client/index.html"));
+});
+
 const syncChains = () => {
   request(
     { url: `${ROOT_NODE_ADDERSS}/api/blocks` },
@@ -124,45 +129,41 @@ const syncChains = () => {
   );
 };
 
-if (isDevelopment) {
-  const walletFoo = new Wallet();
-  const walletBar = new Wallet();
+// if (isDevelopment) {
+const walletFoo = new Wallet();
+const walletBar = new Wallet();
 
-  const generateWalletTransaction = (
-    wallet: any,
-    recipient: any,
-    amout: any
-  ) => {
-    const transaction = wallet.createTransction(
-      recipient,
-      amout,
-      blockchain.chain
-    );
-    transactionPoll.setTransaction(transaction);
-  };
+const generateWalletTransaction = (wallet: any, recipient: any, amout: any) => {
+  const transaction = wallet.createTransction(
+    recipient,
+    amout,
+    blockchain.chain
+  );
+  transactionPoll.setTransaction(transaction);
+};
 
-  const walletAction = () =>
-    generateWalletTransaction(wallet, walletFoo.publicKey, 5);
-  const walletFooAction = () =>
-    generateWalletTransaction(wallet, walletBar.publicKey, 10);
-  const walletBarAction = () =>
-    generateWalletTransaction(wallet, wallet.publicKey, 20);
+const walletAction = () =>
+  generateWalletTransaction(wallet, walletFoo.publicKey, 5);
+const walletFooAction = () =>
+  generateWalletTransaction(wallet, walletBar.publicKey, 10);
+const walletBarAction = () =>
+  generateWalletTransaction(wallet, wallet.publicKey, 20);
 
-  for (let i = 0; i < 10; i++) {
-    if (i % 3 === 0) {
-      walletAction();
-      walletFooAction();
-    } else if (i % 3 === 1) {
-      walletAction();
-      walletBarAction();
-    } else {
-      walletFooAction();
-      walletBarAction();
-    }
-
-    transactionMiner.mineTransactions();
+for (let i = 0; i < 10; i++) {
+  if (i % 3 === 0) {
+    walletAction();
+    walletFooAction();
+  } else if (i % 3 === 1) {
+    walletAction();
+    walletBarAction();
+  } else {
+    walletFooAction();
+    walletBarAction();
   }
+
+  transactionMiner.mineTransactions();
 }
+// }
 
 try {
   app.listen(port, (): void => {
