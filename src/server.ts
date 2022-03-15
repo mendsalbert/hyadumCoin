@@ -52,12 +52,16 @@ app.use(express.urlencoded({ extended: true }));
 // });
 
 app.get("/api/blocks", (req: Request, res: Response) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   res.status(200).json({
     blockchain: blockchain,
   });
 });
 
 app.post("/api/mine", (req: Request, res: Response) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   const { data } = req.body;
   blockchain.addBlock({ data });
   pubsub.broadcastChain();
@@ -65,6 +69,8 @@ app.post("/api/mine", (req: Request, res: Response) => {
 });
 
 app.post("/api/transact", async (req: Request, res: Response) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   const { recipient, amount } = req.body;
 
   let transaction: any = transactionPoll.existingTransaction(wallet.publicKey);
@@ -85,17 +91,23 @@ app.post("/api/transact", async (req: Request, res: Response) => {
 });
 
 app.get("/api/transaction-poll", (req: Request, res: Response) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   res.status(200).json({
     transactionPoll: transactionPoll.transactionMap,
   });
 });
 
 app.get("/api/mine-transaction", (req: Request, res: Response) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   transactionMiner.mineTransactions();
   res.redirect("/api/blocks");
 });
 
 app.get("/api/wallet-info", (req: Request, res: Response) => {
+  res.set("Access-Control-Allow-Origin", "*");
+
   const address = wallet.publicKey;
   res.json({
     address: address,
