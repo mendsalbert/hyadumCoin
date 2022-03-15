@@ -7,6 +7,8 @@ import TransactionPool from "./wallet/TransactionPoll";
 import Transaction from "./wallet/Transactions";
 import TransactionMiner from "./app/TransactionMiner";
 import path from "path";
+var cors = require("cors");
+// import cors from 'cors'
 const isDevelopment = process.env.ENV === "development";
 const REDIS_URL = isDevelopment
   ? "redis://127.0.0.1:3679"
@@ -24,7 +26,7 @@ const ROOT_NODE_ADDERSS = `http://localhost:${DEFAULT_PORT}`;
 
 const request = require("request");
 const app: Application = express();
-
+app.use(cors());
 const blockchain: Blockchain = new Blockchain();
 const wallet: Wallet = new Wallet();
 const transactionPoll: TransactionPool = new TransactionPool();
